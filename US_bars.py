@@ -1,6 +1,5 @@
 
-import tkinter as tk
-from tkinter import ttk
+import streamlit as st
 
 # Bar properties in US customary units
 bar_properties = {
@@ -23,42 +22,13 @@ IN2_TO_MM2 = 645.16
 LB_IN3_TO_G_CM3 = 27.68
 LB_FT_TO_KG_M = 1.48816
 
-def update_properties(event):
-    selected_bar = bar_selector.get()
-    props = bar_properties[selected_bar]
+st.title("US Rebar Size Properties Viewer")
 
-    diameter = props['Diameter (in)']
-    area = props['Area (in²)']
-    density = props['Density (lb/in³)']
-    weight = props['Weight (lb/ft)']
+selected_bar = st.selectbox("Select Bar Size", list(bar_properties.keys()))
+props = bar_properties[selected_bar]
 
-    diameter_label.set(f"{diameter:.3f} in ({diameter * INCH_TO_MM:.2f} mm)")
-    area_label.set(f"{area:.3f} in² ({area * IN2_TO_MM2:.2f} mm²)")
-    density_label.set(f"{density:.3f} lb/in³ ({density * LB_IN3_TO_G_CM3:.2f} g/cm³)")
-    weight_label.set(f"{weight:.3f} lb/ft ({weight * LB_FT_TO_KG_M:.2f} kg/m)")
-
-root = tk.Tk()
-root.title("US Bar Size Properties")
-
-ttk.Label(root, text="Select Bar Size:").grid(column=0, row=0, padx=10, pady=10)
-bar_selector = ttk.Combobox(root, values=list(bar_properties.keys()), state="readonly")
-bar_selector.grid(column=1, row=0, padx=10, pady=10)
-bar_selector.bind("<<ComboboxSelected>>", update_properties)
-
-ttk.Label(root, text="Diameter:").grid(column=0, row=1)
-diameter_label = tk.StringVar()
-ttk.Label(root, textvariable=diameter_label).grid(column=1, row=1)
-
-ttk.Label(root, text="Area:").grid(column=0, row=2)
-area_label = tk.StringVar()
-ttk.Label(root, textvariable=area_label).grid(column=1, row=2)
-
-ttk.Label(root, text="Density:").grid(column=0, row=3)
-density_label = tk.StringVar()
-ttk.Label(root, textvariable=density_label).grid(column=1, row=3)
-
-ttk.Label(root, text="Weight per Unit Length:").grid(column=0, row=4)
-weight_label = tk.StringVar()
-ttk.Label(root, textvariable=weight_label).grid(column=1, row=4)
-
-root.mainloop()
+# Display with metric units in parentheses
+st.markdown(f"**Diameter:** {props['Diameter (in)']:.3f} in ({props['Diameter (in)'] * INCH_TO_MM:.2f} mm)")
+st.markdown(f"**Area:** {props['Area (in²)']:.3f} in² ({props['Area (in²)'] * IN2_TO_MM2:.2f} mm²)")
+st.markdown(f"**Density:** {props['Density (lb/in³)']:.3f} lb/in³ ({props['Density (lb/in³)'] * LB_IN3_TO_G_CM3:.2f} g/cm³)")
+st.markdown(f"**Weight per Unit Length:** {props['Weight (lb/ft)']:.3f} lb/ft ({props['Weight (lb/ft)'] * LB_FT_TO_KG_M:.2f} kg/m)")
